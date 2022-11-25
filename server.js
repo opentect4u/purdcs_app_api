@@ -12,6 +12,7 @@ app.use(express.urlencoded({ extended: true }))
 // ROUTERS INITIALIZATION
 const { salRouter } = require('./router/salaryRouter');
 const { apiRouter } = require('./router/apiRouter');
+const { appApiRouter } = require('./router/appApiRouter');
 // END
 
 app.get('/', (req, res) => {
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 // USE ROUER FOR SPECIFIC URL
 app.use('/sal', salRouter)
 app.use('/api', apiRouter)
+app.use('/api', appApiRouter)
 // END
 
 // SERVER LISTNING
