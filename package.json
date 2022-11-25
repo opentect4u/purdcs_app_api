@@ -1,0 +1,16 @@
+{
+  "name": "btcbpayapi",
+  "version": "1.0.0",
+  "description": "BTCB Payroll API",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server"
+  },
+  "author": "Subham Samanta",
+  "license": "ISC",
+  "dependencies": {
+    "dateformat": "^4.5.1",
+    "express": "^4.18.1",
+    "oracledb": "^5.5.0"
+  }
+}
