@@ -45,7 +45,7 @@ appApiRouter.post('/deposit_type_list', async (req, res) => {
     res.send(resDt);
 })
 
-appApiRouter.post('/deposit_dtls', async (req, res) => {
+appApiRouter.post('/deposit_tns_dtls', async (req, res) => {
     var data = req.body;
     var acc_num = data.acc_num,
         acc_type = data.acc_type;
@@ -53,6 +53,20 @@ appApiRouter.post('/deposit_dtls', async (req, res) => {
         fields = "trans_dt,trans_cd,particulars,trans_type,amount",
         table_name = "V_TRANS_DTLS",
         where = `acc_type_cd = ${acc_type} AND acc_num ='${acc_num}'`,
+        order = null,
+        flag = 1;
+    var resDt = await F_Select(pax_id, fields, table_name, where, order, flag)
+    res.send(resDt);
+})
+
+appApiRouter.post('/deposit_acc_dtls', async (req, res) => {
+    var data = req.body;
+    var acc_num = data.acc_num,
+        acc_type = data.acc_type;
+    var pax_id = db_id,
+        fields = "a.cust_cd, a.oprn_instr_cd, a.constitution_cd, a.opening_dt, a.instl_amt, a.instl_no, a.mat_dt, a.dep_period, a.prn_amt + a.intt_amt, a.intt_rt, Decode (a.ACC_TYPE_CD, 1, a.CLR_BAL, 6, f_get_rd_prn (a.ACC_NUM,sysdate), 7, a.CLR_BAL, 9, a.CLR_BAL, a. PRN_AMT) Balance , a.lock_mode",
+        table_name = "TM_DEPOSIT a, MM_ACC_TYPE b",
+        where = `a.acc_type_cd= b.acc_type_cd AND a.acc_type_cd=${acc_type} AND a.acc_num = '${acc_num}'`,
         order = null,
         flag = 1;
     var resDt = await F_Select(pax_id, fields, table_name, where, order, flag)
