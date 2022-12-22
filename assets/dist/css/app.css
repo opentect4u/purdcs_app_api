@@ -1,0 +1,275 @@
+/*LANDING PAGE CSS START*/
+.card_headerCustom {
+    background-color: transparent;
+/*    border-bottom: 1px solid rgba(0, 0, 0, .125);*/
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.card_headerCustom h1.landingTitle {
+    color: #364051;
+    font-size: 30px;
+    margin: 0 0 15px 0;
+    padding: 0;
+    display: block;
+    font-weight: 700;
+}
+
+.customRow {
+    margin: 0 -15px;
+}
+
+.contentTxtBoxMainArea {
+    overflow: hidden;
+}
+
+.contentTxtBox {
+    max-width: 25%;
+    width: 100%;
+    float: left;
+    padding: 0 15px;
+    margin-bottom: 30px;
+    box-sizing: border-box; 
+}
+
+.contentTxtBox .contentTxtBoxSub {
+/*    border-left: #f5f5f5 solid 2px;*/
+	background: #f7f7f7;
+    padding-bottom: 25px;
+    transition: all 0.3s;
+    transition: all 500ms ease-in-out; height: 100%; position: relative;
+}
+
+.contentTxtBox:hover .contentTxtBoxSub {
+/*    border-left: #f5f5f5 solid 2px;*/
+    padding-bottom: 25px; 
+/*    background: #f5f5f5;*/
+}
+
+
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_TxtArea {
+    padding: 15px 15px 30px 15px;
+   /* min-height: 180px; 
+	background: #f7f7f7;*/
+}
+
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_TxtArea h2.boxTitle {
+    color: #364051;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0 0 2px 0;
+    padding: 0;
+}
+
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_TxtArea h2.boxTitleBilpay {
+    color: #009f5e;
+    font-size: 27px;
+    font-weight: 600;
+    margin: 0 0 14px 0;
+    padding: 0;
+}
+
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_TxtArea p {
+    color: #4e535b;
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+}
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_TxtArea p a{color: #3d62a6; font-weight: bold;}
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_TxtArea p a:hover{text-decoration: underline;}
+
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_LinkArea {
+    text-align: center;
+/*    height: 59px; */
+	position: absolute; bottom: 0;
+width: 100%;
+}
+
+.contentTxtBox .contentTxtBoxSub .contentTxtBoxSub_LinkArea a {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #3d62a6;
+    border-radius: 0 0 10px 10px;
+    padding:6px 15px;
+    display: block;
+    opacity: 1;
+	transition: all 0.3s;
+    transition: all 500ms ease-in-out;
+}
+
+.contentTxtBox:hover .contentTxtBoxSub .contentTxtBoxSub_LinkArea a {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    background: #1e3560;
+    border-radius: 0 0 10px 10px;
+    padding:6px 15px;
+    display: block;
+    opacity: 1;
+}
+
+.card-primary.card-outlineCustom{border:1px solid #c4c4c4; border-radius: 8px;}
+.card-outlineCustom .card-header{border-bottom:none; padding-left:40px; padding-right:40px; padding-top: 60px;}
+h3.loginTitle{margin:0; padding:0; color: #202124; font-size:24px; text-align:center;padding-bottom: 30px;}
+.card-outlineCustom p.login-box-msg{font-size: 18px; color: #202124; padding-bottom:30px;}
+.form_controlCustomLogin{font-size: 18px; height: 55px;}
+body.login-page{background-color: #fff;}
+.card_bodyCustom{padding-left:25px; padding-right:25px; padding-bottom: 60px;}
+a.helpLink{font-size:15px; color: #757575;}
+/*a.helpLink:focus {
+    background: #e0e0e0;
+}*/
+
+.mb3Custom{margin-bottom: 30px !important;}
+.login-boxCuston{width: 450px;}
+
+.logoLogin img{width:125px;}
+
+
+ul.topMenuRight {
+    margin-left: auto; margin-bottom: 0;
+}
+
+ul.topMenuRight li {
+    display: inline-block;
+    color: #4b4e51;
+}
+
+ul.topMenuRight li.userDrop > a {
+    color: #4b4e51;
+    font-size: 14px;
+}
+
+ul.topMenuRight li.userDrop img.thumImg {
+    width: 35px;
+    height: 35px;
+    overflow: hidden;
+    border-radius: 50px;
+    box-shadow: 0px 0 3px 2px #ccc;
+    border: #fff solid 1px;
+    margin-right: 10px;
+}
+
+ul.topMenuRight li.userDrop > a {
+    color: #4b4e51;
+    font-size: 14px;
+}
+ul.topMenuRight li.userDrop span.nav-profile-name{color: #353637;font-size: 16px;margin-right: 15px;font-weight: 500;}
+
+.bankName{font-size: 18px; color: #353637; line-height: 31px;}
+
+.navbarCustome{background: #fff; border-bottom:#eceff1 solid 1px !important;}
+.navbarDangerCustom{background: #f7f7f7; border-bottom:#eceff1 solid 1px !important; padding: 10px 15px;}
+.navbarDangerCustom .brandimageCustom{margin-left:0;margin-right:0;}
+.main_sidebarCustom{background: #f7f7f7;}
+.sidebarCustom{padding-left: 0; padding-right: 0;}
+ul.navCustomLeft li a{padding-left: 0; padding-right: 0; color: #364051;}
+ul.navCustomLeft li a.nav-link  {color:#364051 ;
+font-size: 17px;
+padding-left: 10px;
+margin: 0 !important;
+padding-top: 7px;
+padding-bottom: 7px;
+border-radius: 0 25px 25px 0;}
+ul.navCustomLeft li a.nav-link:hover {color: #364051 !important; background: #f1f3f4 !important;}
+.navbarCustome .navbar-nav .nav-link{color: #364051;}
+.navbarCustome .navbar-nav .nav-link:hover{color: #364051;}
+.select2-container--default.select2-container--disabled .select2-selection--single{background: #fff;}
+.bs-stepper .step-trigger:focus{color: #3d62a6;}
+
+.btn-outline-success:not(:disabled):not(.disabled).active, 
+.btn-outline-success:not(:disabled):not(.disabled):active, .show > .btn-outline-success.dropdown-toggle {background: #3d62a6;}
+.btn-outline-info:not(:disabled):not(.disabled).active, 
+.btn-outline-info:not(:disabled):not(.disabled):active, .show > .btn-outline-info.dropdown-toggle {background: #3d62a6;}
+.btn-outline-danger:not(:disabled):not(.disabled).active, 
+.btn-outline-danger:not(:disabled):not(.disabled):active, .show > .btn-outline-danger.dropdown-toggle {background: #3d62a6;}
+
+
+ul.navCustomLeft li a.nav-link i.nav-icon{font-size: 15px !important;}
+.main_sidebarCustom{box-shadow:inherit !important;}
+
+
+.register-boxCuston{
+    width: 600px;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+    font-weight: 500;
+}
+.input-group .has-float-label {
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+.content_wrapperCustom, .content-wrapper{background: #fff;}
+
+.btn{color: #fff; font-size: 18px; background: #3d62a6; border-radius:30px !important; border: none; padding: 6px 20px;}
+.btn:hover{color: #fff; font-size: 18px; font-weight: 500; background: #1e3560;}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active{background-color: #3d62a6;}
+.active .bs-stepper-circle {background-color: #3d62a6;}
+
+.navbarCustome .navbar-nav li{color: #353637;}
+
+.main-footer {color: #3e464d; font-size: 16px;}
+.main-footer a{color: #1f252b; font-weight: 600;}
+
+
+
+
+.register-boxCuston .form-control::-webkit-input-placeholder { /* Edge */
+  color: #fff; opacity: 0;
+}
+
+.register-boxCuston .form-control:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color:  #fff; opacity: 0;
+}
+
+.register-boxCuston .form-control::placeholder {
+  color:  #fff; opacity: 0;
+}
+
+.customRowCustom{display: flex;}
+
+
+@media (max-width:991.98px) {
+	body:not(.sidebar-mini-md) .main-header, body:not(.sidebar-mini-md) .content-wrapper{margin-left: 250px;}
+	
+}
+
+
+/*LANDING PAGE CSS END*/
+/* FLOATING BUTTON */
+.float {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    bottom: 15px;
+    left: 10px;
+    background-color: #3d62a6;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 1000;
+}
+
+.my-float {
+    margin-top: 12px;
+}
+
+/* END */
