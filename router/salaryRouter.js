@@ -2,7 +2,7 @@ const express = require('express'),
     salRouter = express.Router(),
     dateformat = require('dateformat');
 
-const { F_Select, F_Insert, F_Insert_Puri } = require('../controller/masterController');
+const { F_Select, F_Insert } = require('../controller/masterController');
 
 salRouter.get('/', async (req, res) => {
     // var data = await GetPacsDtls();
@@ -33,34 +33,6 @@ salRouter.post('/save', async (req, res) => {
         let flag = 0
         let table_name = 'TD_PAY_SLIP'
         let dt_res = await F_Insert(pax_id, table_name, fields, val, values, where, flag)
-        if (dt_res.suc == 0) {
-            res_dt = dt_res;
-            break;
-        } else {
-            res_dt = dt_res
-        }
-    }
-    // var dt = await F_Insert(pax_id, table_name, fields, values, where, flag)
-    res.send(res_dt)
-})
-
-salRouter.post('/puri_save', async (req, res) => {
-    var data = req.body,
-        res_dt = { suc: 1, msg: 'result' };
-    var pax_id = 4;
-    // console.log(data);
-    for (let dt of data) {
-        // console.log(dt);
-        let values = ''
-        let fields = `trans_date, trans_no, sal_month, sal_year, emp_code, catg_id, basic_bal, da, sa_bal, hra, ta, da_on_sa, 
-            da_on_ta, ma, cash_swa, lwp, final_gross, pf, loan_prin, loan_int, p_tax, gici, income_tax_tds, sec_bal, ins_bal, 
-            tot_diduction, net_sal, bank_ac_no, created_by, created_dt, remarks`
-        let val = "(:0, :1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11, :12, :13, :14, :15, :16, :17, :18, :19, :20, :21, :22, :23, :24, :25, :26, :27, :28, :29, :30, :31)"
-        values = [dateformat(dt.trans_date, "dd-mmm-yy"), dt.trans_no, dt.sal_month, dt.sal_year, dt.emp_code, dt.catg_id, dt.basic, dt.da, dt.sa, dt.hra, dt.ta, dt.da_on_sa, dt.da_on_ta, dt.ma, dt.cash_swa, dt.lwp, dt.final_gross, dt.pf, dt.loan_prin, dt.loan_int, dt.p_tax, dt.gici, dt.income_tax_tds, dt.security, dt.insurance, dt.tot_diduction, dt.net_sal, dt.bank_ac_no, dt.created_by, dt.created_dt, dt.remarks]
-        let where = null
-        let flag = 0
-        let table_name = 'TD_PAY_SLIP'
-        let dt_res = await F_Insert_Puri(pax_id, table_name, fields, val, values, where, flag)
         if (dt_res.suc == 0) {
             res_dt = dt_res;
             break;
