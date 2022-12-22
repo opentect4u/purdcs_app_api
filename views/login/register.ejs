@@ -1,0 +1,288 @@
+<%- include('../template/login_header') %>
+    <style>
+        .has-float-label {
+            display: block;
+            position: relative
+        }
+
+        .has-float-label label,
+        .has-float-label>span {
+            position: absolute;
+            cursor: text;
+            font-size: 75%;
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+            top: -.5em;
+            left: .75rem;
+            z-index: 3;
+            line-height: 1;
+            padding: 0 1px
+        }
+
+        .has-float-label label::after,
+        .has-float-label>span::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            background: #fff;
+            height: 2px;
+            top: 50%;
+            left: -.2em;
+            right: -.2em;
+            z-index: -1
+        }
+
+        .has-float-label .form-control::-webkit-input-placeholder {
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+            opacity: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 150%;
+            opacity: .5;
+            top: .3em
+        }
+
+        .input-group .has-float-label {
+            display: table-cell
+        }
+
+        .input-group .has-float-label .form-control {
+            border-radius: .25rem
+        }
+
+        .input-group .has-float-label:not(:last-child),
+        .input-group .has-float-label:not(:last-child) .form-control {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            border-right: 0
+        }
+
+        .input-group .has-float-label:not(:first-child),
+        .input-group .has-float-label:not(:first-child) .form-control {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 100%;
+            opacity: .7;
+            top: 0.7em;
+        }
+    </style>
+    <div class="register-box register-boxCuston">
+        <div class="card card-outline card-outlineCustom card-primary">
+            <div class="card-header text-center">
+                <a href="/" class="h1 logoLogin"><img src="/dist/img/logoLogin.svg" alt="eporiseva"></a>
+            </div>
+            <div class="card-body card_bodyCustom">
+
+                <form action="/new_register" method="POST">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="text" name="agent_id" placeholder="Agent ID"
+                                        value="<%= agent_id; %>" readonly />
+                                    <label for="first">Agent ID</label>
+                                </span>
+                            </div>
+                            <!-- <label>Client ID</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Full name">
+                            </div> -->
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="text" name="client_name" id="client_name"
+                                        placeholder="Client Name" value="<%= client_name; %>" readonly />
+                                    <label for="client_name">Client Name</label>
+                                </span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="client_id" value="<%= client_id; %>">
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="text" name="name" id="name"
+                                        placeholder="Full Name" />
+                                    <label for="name">Full Name</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="text" name="designation" id="designation"
+                                        placeholder="Designation" />
+                                    <label for="designation">Designation</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="email" name="email" id="email"
+                                        placeholder="Email" />
+                                    <label for="email">Email</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="password" name="pass" id="pass"
+                                        placeholder="Password" />
+                                    <label for="pass">Password</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="password" id="re_pass"
+                                        placeholder="Retype Password" />
+                                    <label for="re_pass">Retype Password</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="text" name="pin" id="pin" placeholder="PIN"
+                                        data-inputmask='"mask": "9-9-9-9"' data-mask />
+                                    <label for="pin">PIN</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group input-group">
+                                <span class="has-float-label">
+                                    <input class="form-control" type="text" id="re_pin" placeholder="Retype PIN"
+                                        data-inputmask='"mask": "9-9-9-9"' data-mask />
+                                    <label for="re_pin">Retype PIN</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+						<div class="col-4">
+                            <button type="submit" name="body" class="btn btn-primary btn-block"
+                                onclick="return check_submit();">Register</button>
+                        </div>
+                        <div class="col-8">
+                        </div>
+                        <!-- /.col -->
+                        
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
+    </div>
+    <!-- /.register-box -->
+
+    <%- include('../template/login_footer') %>
+
+        <script>
+            var pass_chk = false,
+                pin_chk = false;
+            $('#pass').on('change', function () {
+                var re_pass = $('#re_pass').val(),
+                    pass = $(this).val();
+                if (re_pass != '') {
+                    if (pass == re_pass) {
+                        $('#re_pass').removeClass('is-invalid');
+                        pass_chk = true;
+                    } else {
+                        $('#re_pass').addClass('is-invalid');
+                        alert('Please Enter Correct Password');
+                        pass_chk = false;
+                    }
+                } else {
+                    pass_chk = false;
+                }
+            });
+            $('#re_pass').on('change', function () {
+                var pass = $('#pass').val(),
+                    re_pass = $(this).val();
+                if (re_pass != '') {
+                    if (pass == re_pass) {
+                        $('#re_pass').removeClass('is-invalid');
+                        pass_chk = true;
+                    } else {
+                        $('#re_pass').addClass('is-invalid');
+                        alert('Please Enter Correct Password')
+                        pass_chk = false;
+                    }
+                } else {
+                    pass_chk = false;
+                }
+            });
+            $('#pin').on('change', function () {
+                var re_pin = $('#re_pin').val(),
+                    pin = $(this).val();
+                if (re_pin != '') {
+                    if (pin == re_pin) {
+                        $('#re_pin').removeClass('is-invalid');
+                        pin_chk = true;
+                    } else {
+                        $('#re_pin').addClass('is-invalid');
+                        alert('Please Enter Correct PIN')
+                        pin_chk = false;
+                    }
+                } else {
+                    pin_chk = false;
+                }
+            });
+            $('#re_pin').on('change', function () {
+                var pin = $('#pin').val(),
+                    re_pin = $(this).val();
+                if (re_pin != '') {
+                    if (pin == re_pin) {
+                        $('#re_pin').removeClass('is-invalid');
+                        pin_chk = true;
+                    } else {
+                        $('#re_pin').addClass('is-invalid');
+                        alert('Please Enter Correct PIN')
+                        pin_chk = false;
+                    }
+                } else {
+                    pin_chk = false;
+                }
+            });
+            $('[data-mask]').inputmask()
+
+        </script>
+        <script>
+            function check_submit() {
+                if (pass_chk && pin_chk) {
+                    return true;
+                } else {
+                    console.log({ pass_chk, pin_chk });
+                    if (!pass_chk) { alert('Please Enter Correct Password') }
+                    if (!pin_chk) { alert('Please Enter Correct PIN') }
+                    return false;
+                }
+            }
+        </script>

@@ -1,0 +1,335 @@
+<%- include('../template/header'); %>
+    <style>
+        .has-float-label {
+            display: block;
+            position: relative
+        }
+
+        .has-float-label label,
+        .has-float-label>span {
+            position: absolute;
+            cursor: text;
+            font-size: 75%;
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+            top: -.5em;
+            left: .75rem;
+            z-index: 3;
+            line-height: 1;
+            padding: 0 1px
+        }
+
+        .has-float-label label::after,
+        .has-float-label>span::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            background: #fff;
+            height: 2px;
+            top: 50%;
+            left: -.2em;
+            right: -.2em;
+            z-index: -1
+        }
+
+        .has-float-label .form-control::-webkit-input-placeholder {
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+            opacity: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 150%;
+            opacity: .5;
+            top: .3em
+        }
+
+        .input-group .has-float-label {
+            display: table-cell
+        }
+
+        .input-group .has-float-label .form-control {
+            border-radius: .25rem
+        }
+
+        .input-group .has-float-label:not(:last-child),
+        .input-group .has-float-label:not(:last-child) .form-control {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            border-right: 0
+        }
+
+        .input-group .has-float-label:not(:first-child),
+        .input-group .has-float-label:not(:first-child) .form-control {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 100%;
+            opacity: .7;
+            top: 0.7em;
+        }
+		
+		/* password validation */
+		/* The message box is shown when the user clicks on the password field */
+        #message {
+            display: none;
+            background: #f1f1f1;
+            color: #000;
+            position: relative;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        #message p {
+            padding: 10px 35px;
+            font-size: 18px;
+        }
+
+        /* Add a green text color and a checkmark when the requirements are right */
+        .valid {
+            color: green;
+        }
+
+        .valid:before {
+            position: relative;
+            left: -35px;
+            content: "✔";
+        }
+
+        /* Add a red text color and an "x" when the requirements are wrong */
+        .invalid {
+            color: red;
+        }
+
+        .invalid:before {
+            position: relative;
+            left: -35px;
+            content: "✖";
+        }
+    </style>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Change Password</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col-md-12">
+						<% if(message){ %>
+                        <div class="alert alert-<%= message.type; %> alert-dismissible fade show" role="alert">
+                            <strong><%= message.message; %></strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <% } %>
+                        <div class="card card-primary card-outline">
+                            <div class="card-body">
+                                <form action="/change_pass" method="post">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group input-group">
+                                                <span class="has-float-label">
+                                                    <input class="form-control" type="password" name="old_pass"
+                                                        id="old_pass" placeholder="Old Password" />
+                                                    <label for="old_pass">Old Password</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group input-group">
+                                                <span class="has-float-label">
+                                                    <input class="form-control" type="password" name="pass" id="pass"
+                                                        placeholder="Password" />
+                                                    <label for="pass">Password</label>
+                                                </span>
+                                            </div>
+                                        </div>
+										<div id="message">
+                                            <h3>Password must contain the following:</h3>
+                                            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+                                            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                                            <p id="number" class="invalid">A <b>number</b></p>
+                                            <p id="char" class="invalid">A <b>special character</b></p>
+                                            <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group input-group">
+                                                <span class="has-float-label">
+                                                    <input class="form-control" type="password" id="re_pass"
+                                                        placeholder="Retype Password" />
+                                                    <label for="re_pass">Retype Password</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="id" value="<%= id; %>">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <button type="submit" class="btn btn-danger"
+                                                onclick="return check_submit()">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <%- include('../template/footer'); %>
+
+        <script>
+            var myInput = document.getElementById("pass");
+            var letter = document.getElementById("letter");
+            var capital = document.getElementById("capital");
+            var number = document.getElementById("number");
+            var length = document.getElementById("length");
+            var character = document.getElementById("char");
+            var pass_val = false;
+
+            $('#pass').keyup(function () {
+                // Validate lowercase letters
+                var lowerCaseLetters = /[a-z]/g;
+                if (myInput.value.match(lowerCaseLetters)) {
+                    letter.classList.remove("invalid");
+                    letter.classList.add("valid");
+                } else {
+                    letter.classList.remove("valid");
+                    letter.classList.add("invalid");
+                }
+
+                // Validate capital letters
+                var upperCaseLetters = /[A-Z]/g;
+                if (myInput.value.match(upperCaseLetters)) {
+                    capital.classList.remove("invalid");
+                    capital.classList.add("valid");
+                } else {
+                    capital.classList.remove("valid");
+                    capital.classList.add("invalid");
+                }
+
+                // Validate numbers
+                var numbers = /[0-9]/g;
+                if (myInput.value.match(numbers)) {
+                    number.classList.remove("invalid");
+                    number.classList.add("valid");
+                } else {
+                    number.classList.remove("valid");
+                    number.classList.add("invalid");
+                }
+
+                // Special character
+                var char = /[#?!@$%^&*-]/g;
+                if (myInput.value.match(char)) {
+                    character.classList.remove("invalid");
+                    character.classList.add("valid");
+                } else {
+                    character.classList.remove("valid");
+                    character.classList.add("invalid");
+                }
+
+                // Validate length
+                if (myInput.value.length >= 8) {
+                    length.classList.remove("invalid");
+                    length.classList.add("valid");
+                } else {
+                    length.classList.remove("valid");
+                    length.classList.add("invalid");
+                }
+
+                if (myInput.value.match(lowerCaseLetters) && myInput.value.match(upperCaseLetters) && myInput.value.match(numbers) && myInput.value.match(char) && myInput.value.length >= 8) {
+                    pass_val = true;
+                } else {
+                    pass_val = false;
+                }
+            }).focus(function () {
+                // focus code here
+                $("#message").show();
+            }).blur(function () {
+                // blur code here
+                $("#message").hide();
+            });
+
+        </script>
+
+		<script>
+            var pass_chk = false;
+            $('#pass').on('change', function () {
+                var re_pass = $('#re_pass').val(),
+                    pass = $(this).val();
+                if (re_pass != '') {
+                    if (pass == re_pass) {
+                        $('#re_pass').removeClass('is-invalid');
+                        pass_chk = true;
+                    } else {
+                        $('#re_pass').addClass('is-invalid');
+                        alert('Please Enter Correct Password');
+                        pass_chk = false;
+                    }
+                } else {
+                    pass_chk = false;
+                }
+            });
+            $('#re_pass').on('change', function () {
+                var pass = $('#pass').val(),
+                    re_pass = $(this).val();
+                if (re_pass != '') {
+                    if (pass == re_pass) {
+                        $('#re_pass').removeClass('is-invalid');
+                        pass_chk = true;
+                    } else {
+                        $('#re_pass').addClass('is-invalid');
+                        alert('Please Enter Correct Password')
+                        pass_chk = false;
+                    }
+                } else {
+                    pass_chk = false;
+                }
+            });
+        </script>
+        <script>
+            function check_submit() {
+                if (pass_chk) {
+                    return true;
+                } else {
+                    if (!pass_chk) { alert('Please Enter Correct Password') }
+					if (!pass_val) {
+                        $('#pass').addClass('is-invalid');
+                        alert('Please match the password credentials');
+                    } else {
+                        $('#pass').removeClass('is-invalid');
+                    }
+                    return false;
+                }
+            }
+        </script>

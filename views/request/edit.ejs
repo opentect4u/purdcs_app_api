@@ -1,0 +1,103 @@
+<%- include('../template/header'); %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1><%= heading %></h1>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <% if(message){ %>
+      <div class="alert alert-<%= message.type; %> alert-dismissible fade show" role="alert">
+        <strong><%= message.message; %></strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <% } %>
+      <!-- SELECT2 EXAMPLE -->
+      <div class="card card-default">
+        <div class="card-header">
+          <h3 class="card-title"><%= sub_heading %></h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <form action="/admin/request_edit" method="post">
+            <div class="row">
+              <div class="col-md-3 row">
+                <div class="col-md-6"><b>Customer ID: </b></div>
+                <div class="col-md-6"><%= req_data ? req_data.REQ_CUST_ID : '' %></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 row">
+                <div class="col-md-6"><b>A/C Type: </b></div>
+                <div class="col-md-6"><%= req_data ? req_data.ACC_TYPE_NAME : '' %></div>
+              </div>
+              <div class="col-md-3 row">
+                <div class="col-md-6"><b>A/C No.: </b></div>
+                <div class="col-md-6"><%= req_data ? req_data.ACC_NO : '' %></div>
+              </div>
+            </div>
+            <% if(req_data.REQ_FLAG == 'A'){ %>
+            <div class="row">
+              <div class="col-md-3 row">
+                <div class="col-md-6"><b>From: </b></div>
+                <div class="col-md-6"><%= req_data ? dateFormat(req_data.FRM_DT, "dd/mm/yyyy") : '' %></div>
+              </div>
+              <div class="col-md-3 row">
+                <div class="col-md-6"><b>To: </b></div>
+                <div class="col-md-6"><%= req_data ? dateFormat(req_data.TO_DT, "dd/mm/yyyy") : '' %></div>
+              </div>
+            </div>
+            <% } %>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label for="update_flag" class="col-form-label">Status</label>
+                  <select name="update_flag" id="update_flag" class="form-control select2" required>
+                    <option>Default select</option>
+                    <option value="P" <%= req_data ? (req_data.UPDATE_FLAG == 'P' ? 'selected' : '') : '' %>>Pending</option>
+                    <option value="A" <%= req_data ? (req_data.UPDATE_FLAG == 'A' ? 'selected' : '') : '' %>>Accepted</option>
+                    <option value="R" <%= req_data ? (req_data.UPDATE_FLAG == 'R' ? 'selected' : '') : '' %>>Resolve</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-10">
+                <div class="form-group">
+                  <label for="remarks" class="col-form-label">Remarks</label>
+                  <div class="col-sm-11">
+                    <textarea name="remarks" id="remarks" class="form-control" aria-label="With textarea">
+<%= req_data ? req_data.REMARKS : '' %></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="sl_no" value="<%= req_data ? req_data.SL_NO : 0 %>" />
+            <center>
+              <button type="submit" class="btn btn-outline-success mt-4" id="submit">
+                Save
+              </button>
+            </center>
+          </form>
+        </div>
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<%- include('../template/footer'); %>

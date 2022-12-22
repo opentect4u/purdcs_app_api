@@ -1,0 +1,83 @@
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4 main_sidebarCustom">
+  <!-- Brand Logo -->
+  <a href="/" class="brand-link navbar-danger navbarDangerCustom">
+    <img
+      src="/dist/img/logo.png"
+      alt="AdminLTE Logo"
+      class="brand-image brandimageCustom"
+    />
+    <span class="brand-text font-weight-light">PURDCS</span>
+  </a>
+  <div class="sidebar sidebarCustom">
+    <nav class="mt-2">
+      <ul
+        class="nav nav-pills nav-sidebar flex-column nav-compact nav-child-indent navCustomLeft"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="false"
+      >
+        <li class="nav-item">
+          <a
+            href="/admin/dashboard"
+            class="nav-link <%= (active=='dashboard') ? 'active' : ''; %>"
+          >
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            href="/admin/calendar"
+            class="nav-link <%= (active=='calendar' || active=='calendar_edit') ? 'active' : ''; %>"
+          >
+            <i class="nav-icon fas fa-calendar"></i>
+            <p>Calendar</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            href="/admin/notification"
+            class="nav-link <%= (active=='notification') ? 'active' : ''; %>"
+          >
+            <i class="nav-icon fas fa-bell"></i>
+            <p>Send Notification</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            href="/admin/reset_mpin"
+            class="nav-link <%= (active=='reset_mpin') ? 'active' : ''; %>"
+          >
+            <i class="nav-icon fas fa-key"></i>
+            <p>Reset mPIN</p>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/admin/request" class="nav-link <%= (active=='request' || active=='request_edit') ? 'active' : ''; %>">
+            <i class="nav-icon fas fa-paper-plane"></i>
+            <p>Request</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/admin/feedback" class="nav-link <%= (active=='feedback') ? 'active' : ''; %>">
+            <i class="nav-icon fas fa-comments"></i>
+            <p>Feedback</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="/admin/logout" class="nav-link">
+            <i class="nav-icon fas fa-sign-out-alt"></i>
+            <p>Log Out</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

@@ -1,0 +1,59 @@
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav
+      class="main-header navbar navbar-expand text-sm navbar-dark navbar-danger navbarCustome"
+    >
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="/" class="nav-link"
+            ><i class="fa fa-home" aria-hidden="true"></i
+          ></a>
+        </li>
+        <li class="bankName">
+          <!-- IndusInd Bank Retail -->
+          PURDCS ADMIN
+        </li>
+      </ul>
+
+      <ul class="topMenuRight">
+        <li class="userDrop dropdown open active">
+          <span class="nav-profile-name"> Admin </span>
+          <a
+            class=""
+            id="activId"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            role="button"
+            aria-expanded="false"
+          >
+            <img
+              src="<%= '/dist/img/user2-160x160.jpg'; %>"
+              alt="profile"
+              class="thumImg"
+            />
+          </a>
+          <div
+            class="dropdown-menu dropdown-menu-lg"
+            aria-labelledby="navbarDropdown"
+          >
+            <a href="/profile" class="dropdown-item">
+              <i class="fa fa-user-circle" aria-hidden="true"></i>
+              Profile</a
+            >
+            <a href="/change_pass" class="dropdown-item">
+              <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+              Change Password</a
+            >
+            <a href="/change_pin" class="dropdown-item">
+              <i class="fa fa-key" aria-hidden="true"></i>
+              Reset PIN</a
+            >
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.navbar -->
+  </div>
+</body>

@@ -1,0 +1,202 @@
+<%- include('../template/header'); %>
+    <style>
+        .has-float-label {
+            display: block;
+            position: relative
+        }
+
+        .has-float-label label,
+        .has-float-label>span {
+            position: absolute;
+            cursor: text;
+            font-size: 75%;
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+            top: -.5em;
+            left: .75rem;
+            z-index: 3;
+            line-height: 1;
+            padding: 0 1px
+        }
+
+        .has-float-label label::after,
+        .has-float-label>span::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            background: #fff;
+            height: 2px;
+            top: 50%;
+            left: -.2em;
+            right: -.2em;
+            z-index: -1
+        }
+
+        .has-float-label .form-control::-webkit-input-placeholder {
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+            opacity: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 150%;
+            opacity: .5;
+            top: .3em
+        }
+
+        .input-group .has-float-label {
+            display: table-cell
+        }
+
+        .input-group .has-float-label .form-control {
+            border-radius: .25rem
+        }
+
+        .input-group .has-float-label:not(:last-child),
+        .input-group .has-float-label:not(:last-child) .form-control {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            border-right: 0
+        }
+
+        .input-group .has-float-label:not(:first-child),
+        .input-group .has-float-label:not(:first-child) .form-control {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 100%;
+            opacity: .7;
+            top: 0.7em;
+        }
+    </style>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Change Password</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-body">
+                                <form action="/change_pin" method="post">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group input-group">
+                                                <span class="has-float-label">
+                                                    <input class="form-control" type="password" name="pass" id="pass"
+                                                        placeholder="Old Password" />
+                                                    <label for="pass">Old Password</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group input-group">
+                                                <span class="has-float-label">
+                                                    <input class="form-control" type="text" name="pin" id="pin"
+                                                        placeholder="PIN" data-inputmask='"mask": "9-9-9-9"'
+                                                        data-mask />
+                                                    <label for="pin">PIN</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group input-group">
+                                                <span class="has-float-label">
+                                                    <input class="form-control" type="text" id="re_pin"
+                                                        placeholder="Retype PIN" data-inputmask='"mask": "9-9-9-9"'
+                                                        data-mask />
+                                                    <label for="re_pin">Retype PIN</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="id" value="<%= id; %>">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <button type="submit" class="btn btn-danger">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <%- include('../template/footer'); %>
+
+        <script>
+            var pin_chk = false;
+            $('#pin').on('change', function () {
+                var re_pin = $('#re_pin').val(),
+                    pin = $(this).val();
+                if (re_pin != '') {
+                    if (pin == re_pin) {
+                        $('#re_pin').removeClass('is-invalid');
+                        pin_chk = true;
+                    } else {
+                        $('#re_pin').addClass('is-invalid');
+                        alert('Please Enter Correct PIN')
+                        pin_chk = false;
+                    }
+                } else {
+                    pin_chk = false;
+                }
+            });
+            $('#re_pin').on('change', function () {
+                var pin = $('#pin').val(),
+                    re_pin = $(this).val();
+                if (re_pin != '') {
+                    if (pin == re_pin) {
+                        $('#re_pin').removeClass('is-invalid');
+                        pin_chk = true;
+                    } else {
+                        $('#re_pin').addClass('is-invalid');
+                        alert('Please Enter Correct PIN')
+                        pin_chk = false;
+                    }
+                } else {
+                    pin_chk = false;
+                }
+            });
+        </script>
+
+        <script>
+            function check_submit() {
+                if (pin_chk) {
+                    return true;
+                } else {
+                    console.log({ pass_chk, pin_chk });
+                    if (!pin_chk) { alert('Please Enter Correct PIN') }
+                    return false;
+                }
+            }
+        </script>

@@ -1,0 +1,201 @@
+<%- include('../template/header'); %>
+    <style>
+        .has-float-label {
+            display: block;
+            position: relative
+        }
+
+        .has-float-label label,
+        .has-float-label>span {
+            position: absolute;
+            cursor: text;
+            font-size: 75%;
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s;
+            top: -.5em;
+            left: .75rem;
+            z-index: 3;
+            line-height: 1;
+            padding: 0 1px
+        }
+
+        .has-float-label label::after,
+        .has-float-label>span::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            background: #fff;
+            height: 2px;
+            top: 50%;
+            left: -.2em;
+            right: -.2em;
+            z-index: -1
+        }
+
+        .has-float-label .form-control::-webkit-input-placeholder {
+            opacity: 1;
+            -webkit-transition: all .2s;
+            transition: all .2s
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+            opacity: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 150%;
+            opacity: .5;
+            top: .3em
+        }
+
+        .input-group .has-float-label {
+            display: table-cell
+        }
+
+        .input-group .has-float-label .form-control {
+            border-radius: .25rem
+        }
+
+        .input-group .has-float-label:not(:last-child),
+        .input-group .has-float-label:not(:last-child) .form-control {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            border-right: 0
+        }
+
+        .input-group .has-float-label:not(:first-child),
+        .input-group .has-float-label:not(:first-child) .form-control {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0
+        }
+
+        .has-float-label .form-control:placeholder-shown:not(:focus)+* {
+            font-size: 100%;
+            opacity: .7;
+            top: 0.7em;
+        }
+    </style>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Profile</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+
+                        <!-- Profile Image -->
+                        <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    <img class="profile-user-img img-fluid img-circle" id="prev_img"
+                                        src="<%= user[0].img ? 'uploads/' + user[0].img : '/dist/img/user2-160x160.jpg'; %>"
+                                        alt="User profile picture">
+                                </div>
+
+                                <h3 class="profile-username text-center">
+                                    <%= user[0].username %>
+                                </h3>
+
+                                <p class="text-muted text-center">
+                                    <%= user[0].designation %>
+                                </p>
+                                <p class="text-muted text-center">
+                                    <%= user[0].email %>
+                                </p>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+						<% if(message){ %>
+                        <div class="alert alert-<%= message.type; %> alert-dismissible fade show" role="alert">
+                            <strong><%= message.message; %></strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <% } %>
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="active tab-pane" id="info">
+                                    <form action="/profile" enctype="multipart/form-data" method="POST">
+                                        <div class="form-group row">
+                                            <label for="name" class="col-sm-2 col-form-label">User Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" name="name" id="name"
+                                                    placeholder="User Name" autocomplete="off"
+                                                    value="<%= user[0].username %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="designation" class="col-sm-2 col-form-label">Designation</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" name="designation"
+                                                    id="designation" placeholder="Designation" autocomplete="off"
+                                                    value="<%= user[0].designation %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control" name="email" id="email"
+                                                    placeholder="Email" autocomplete="off" value="<%= user[0].email %>"
+                                                    readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="img" class="col-sm-2 col-form-label">Image</label>
+                                            <div class="col-sm-10">
+                                                <input name="img" id="img" type="file" />
+                                            </div>
+                                            <img class="img-fluid img-circle" src="/dist/img/user2-160x160.jpg" alt=""
+                                                style="display: none;">
+                                        </div>
+                                        <input type="hidden" name="id" value="<%= user[0].id; %>">
+                                        <div class="form-group row">
+                                            <div class="offset-sm-2 col-sm-10">
+                                                <button type="submit" class="btn btn-danger">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <%- include('../template/footer'); %>
+
+        <script>
+            $('#img').on('change', function (e) {
+                // console.log(e.target.files[0]);
+                var img = URL.createObjectURL(e.target.files[0]);
+                $('#prev_img').show();
+                $('#prev_img').removeAttr('src');
+                $('#prev_img').attr('src', img)
+            })
+        </script>

@@ -1,0 +1,104 @@
+<%- include('../template/header'); %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1><%= heading %></h1>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <% if(message){ %>
+      <div
+        class="alert alert-<%= message.type; %> alert-dismissible fade show"
+        role="alert"
+      >
+        <strong><%= message.message; %></strong>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <% } %>
+      <!-- SELECT2 EXAMPLE -->
+      <div class="card card-default">
+        <div class="card-header">
+          <h3 class="card-title"><%= sub_heading %></h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <form action="/admin/calendar_edit" method="post">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group row">
+                  <label for="cal_dt" class="col-sm-2 col-form-label"
+                    >Date</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="cal_dt"
+                      name="cal_dt"
+                      value="<%= cal_data ? dateFormat(cal_data.CAL_DT, 'yyyy-mm-dd') : '' %>"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-10">
+                <div class="form-group row">
+                  <label for="cal_event" class="col-sm-1 col-form-label"
+                    >Event</label
+                  >
+                  <div class="col-sm-11">
+                    <textarea
+                      name="cal_event"
+                      id="cal_event"
+                      class="form-control"
+                      aria-label="With textarea"
+                    >
+<%= cal_data ? cal_data.CAL_EVENT : '' %></textarea
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input
+              type="hidden"
+              name="sl_no"
+              value="<%= cal_data ? cal_data.SL_NO : 0 %>"
+            />
+            <center>
+              <button
+                type="submit"
+                class="btn btn-outline-success mt-4"
+                id="submit"
+              >
+                Save
+              </button>
+            </center>
+          </form>
+        </div>
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<%- include('../template/footer'); %>
