@@ -5,7 +5,8 @@ try {
   // oracledb.initOracleClient({
   //   libDir: "C:\\instaclient\\instantclient",
   // });
-  oracledb.initOracleClient({libDir: "C:\\instaclient\\instantclient_11_2"});
+  // console.log(path.join(__dirname, '../instantclient'));
+  oracledb.initOracleClient({ libDir: process.env.ORACLE_INSTACLIENT_PATH });
 } catch (err) {
   console.error("Whoops!");
   console.error(err);
@@ -22,7 +23,7 @@ var db;
         password: "puri_cbs_view161101",
         connectionString: "103.177.225.252:1521/xe",
         poolMax: 5,
-        poolMin: 5,
+        poolMin: 2,
         poolIncrement: 0,
     });
 

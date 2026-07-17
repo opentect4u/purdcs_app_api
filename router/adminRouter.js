@@ -1,4 +1,4 @@
-const { F_Select, Api_Insert, SendNotification } = require("../controller/masterController");
+const { F_Select, Api_Insert, SendNotification, F_Delete } = require("../controller/masterController");
 const { chkUser } = require("./appApiRouter");
 
 const express = require("express"),
@@ -227,7 +227,7 @@ adminRouter.post('/reset_mpin', async (req, res) => {
     remarks = data.remarks;
   var otp = Math.floor(1000 + Math.random() * 9000);
   var text = `Dear User, ${otp} is your Bikash verification code. Do not share it with anyone.-SYNERGIC`;
-  // console.log(text);
+  console.log(text);
   // return new Promise((resolve, reject) => {
   var chk_user = await chkUser(phone_no);
   if (chk_user.suc > 0) {
@@ -308,9 +308,9 @@ const resetMpin = (phone_no, pin, remarks) => {
 const getReqList = (id) => {
   return new Promise(async (resolve, reject) => {
     var pax_id = db_id,
-      fields = "sl_no, req_dt, req_cust_id, acc_type_id, acc_type_name, acc_no, req_flag, frm_dt, to_dt, update_flag, remarks",
-      table_name = "td_request",
-      where = id > 0 ? `sl_no =${id}` : "",
+      fields = "a.sl_no, a.req_dt, a.req_cust_id, a.acc_type_id, a.acc_type_name, a.acc_no, a.req_flag, a.frm_dt, a.to_dt, a.update_flag, a.remarks, b.FIRST_NAME, b.EMAIL, b.PHONE",
+      table_name = "td_request a, MM_CUSTOMER b",
+      where = id > 0 ? `a.REQ_CUST_ID = b.CUST_CD AND sl_no =${id}` : "a.REQ_CUST_ID = b.CUST_CD",
       order = null,
       flag = id > 0 ? 0 : 1;
     var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
@@ -421,6 +421,51 @@ adminRouter.get('/feedback', async (req, res) => {
     sub_heading: "Feedback List",
     dateFormat,
   });
+})
+
+const AllUserList = (id) => {
+  return new Promise(async (resolve, reject) => {
+    var pax_id = db_id,
+      fields = "user_cd, cust_cd, last_login, user_name, active_status",
+      table_name = "md_user",
+      where = id > 0 ? `user_cd =${id}` : "user_type != 'A'",
+      order = null,
+      flag = id > 0 ? 0 : 1;
+    var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
+    resolve(resDt);
+  });
+}
+
+adminRouter.get('/user_list', async (req, res) => {
+  var id = null;
+  var resDt = await AllUserList(id);
+  res.render("user/user_list", {
+    req_dt: resDt,
+    heading: "Registered User List",
+    sub_heading: "User List",
+    dateFormat,
+  });
+})
+
+adminRouter.get('/user_delete', async (req, res) => {
+  var id = req.query.id;
+  console.log(id);
+  var resDt = await F_Delete(db_id, 'md_user', `user_cd = '${id}'`);
+  if (resDt.suc > 0) {
+    req.session.message = {
+      type: "success",
+      message: "Successfully Deleted",
+    };
+    res.redirect("/admin/user_list");
+  //   // res_dt = { suc: 1, msg: resDt.msg };
+  } else {
+    // res_dt = { suc: 0, msg: "You have entered a wrong PIN" };
+    req.session.message = {
+      type: "danger",
+      message: "Please try again later!!",
+    };
+    res.redirect("/admin/user_list");
+  }
 })
 
 module.exports = { adminRouter };
