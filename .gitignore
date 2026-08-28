@@ -4,3 +4,4 @@ instantclient/
 .env
 masterController_05082025.js
 masterController_backup_08_06_2026.js
+conString.js
