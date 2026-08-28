@@ -269,9 +269,9 @@ appApiRouter.post("/login", async (req, res) => {
   // console.log({chk: chkuser.msg.CHKACC});
   if(chkuser.suc > 0 && chkuser.msg.CHKACC > 0 || userId == '9051203118' || userId == '9831887194' || userId == '9748767314' || userId == '7008893051'){
     var pax_id = db_id,
-      fields = "user_cd, mpin, last_login, active_status, initcap(user_name)user_name, cust_cd, img_path, device_id, public_key, device_type, terms_accepted, privacy_accepted",
-      table_name = "md_user",
-      where = `user_cd ='${userId}'`,
+      fields = "a.user_cd, a.mpin, a.last_login, a.active_status, a.initcap(user_name)user_name, a.cust_cd, a.img_path, a.device_id, a.public_key, a.device_type, a.terms_accepted, a.privacy_accepted, b.cust_dt",
+      table_name = "md_user a, mm_customer b",
+      where = `a.cust_cd=b.cust_cd AND a.user_cd ='${userId}'`,
       order = null,
       flag = 0;
     var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
