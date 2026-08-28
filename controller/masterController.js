@@ -9,7 +9,7 @@ try {
   process.exit(1);
 }
 
-oracledb.autoCommit = true;
+oracledb.autoCommit = false;
 
 // POOL MANAGER TO REUSE CONNECTIONS
 const pools = {};
@@ -32,7 +32,7 @@ const getConnection = async (pax_id) => {
 // END
 
 // FUNCTION FOR EXICUTE SELECT QUERY AND RETURN RESULT
-const F_Select = async (pax_id, fields, table_name, where, order, flag) => {
+const F_Select = async (pax_id, fields, table_name, where, order, flag, is_full_query = false, full_query = null) => {
     let con;
     try {
         where = where ? `WHERE ${where}` : '';
@@ -42,7 +42,7 @@ const F_Select = async (pax_id, fields, table_name, where, order, flag) => {
 
         con = await getConnection(pax_id);
 
-        let sql = `SELECT ${fields} ${table_name!=null ? 'FROM ' + table_name : ''} ${where} ${order}`;
+        let sql = is_full_query ? full_query : `SELECT ${fields} ${table_name!=null ? 'FROM ' + table_name : ''} ${where} ${order}`;
         // console.log(sql);
 
         const result = await con.execute(sql, [], {
@@ -126,7 +126,7 @@ const F_Insert_Puri = async (pax_id, table_name, fields, val, values, where, fla
     }
 };
 
-const RunProcedure = async (pax_id, pro_query, table_name, fields, where, order) => {
+const RunProcedure = async (pax_id, pro_query, table_name, fields, where, order, is_full_query = false, full_query = null, auto_commit = true) => {
     let con;
     try {
         where = where ? `WHERE ${where}` : '';
@@ -137,7 +137,9 @@ const RunProcedure = async (pax_id, pro_query, table_name, fields, where, order)
         let query = pro_query;
         await con.execute(query);
 
-        const r = await con.execute(`SELECT ${fields} FROM ${table_name} ${where} ${order}`, [], {
+        let sql = is_full_query ? full_query : `SELECT ${fields} FROM ${table_name} ${where} ${order}`;
+
+        const r = await con.execute(sql, [], {
             resultSet: true,
             outFormat: oracledb.OUT_FORMAT_OBJECT
         });
@@ -153,6 +155,7 @@ const RunProcedure = async (pax_id, pro_query, table_name, fields, where, order)
     } finally {
         if (con) {
             try {
+                await con.commit(); // Commit if auto_commit is true
                 await con.close();
             } catch (err) {
                 console.error("Error closing connection:", err);

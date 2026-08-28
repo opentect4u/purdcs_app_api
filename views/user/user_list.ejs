@@ -27,24 +27,27 @@
       <!-- SELECT2 EXAMPLE -->
       <div class="card card-default">
         <div class="card-header">
-          <h3 class="card-title"><%= sub_heading %></h3>
-          <!-- <div class="card-tools">
-            <a href="/admin/request_edit?id=0" class="btn btn-primary">Add New</a>
-          </div> -->
+          <h3 class="card-title font-weight-bold"><%= sub_heading %></h3>
+          <div class="card-tools">
+            <a href="/admin/shift_device" class="btn btn-warning btn-sm font-weight-bold">
+              <i class="fas fa-sync-alt mr-1"></i> Shift Device Panel
+            </a>
+          </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
           <form action="/request_edit" method="post">
             <div class="row" id="divToPrint">
               <div class="col-md-12">
-                <table id="example2" class="table table-bordered table-hover">
+                <table id="example2" class="table table-bordered table-hover table-striped">
                   <thead>
                     <tr>
-                      <!-- <th></th> -->
                       <th>#</th>
                       <th>Phone No</th>
                       <th>Customer ID</th>
                       <th>Name</th>
+                      <th>Device Status</th>
+                      <th>Terms</th>
                       <th>Last Login</th>
                       <th>Action</th>
                     </tr>
@@ -54,35 +57,44 @@
                     { %>
                     <tr>
                       <td><%= i %></td>
-                      <td><%= dt.USER_CD %></td>
+                      <td class="font-weight-bold"><%= dt.USER_CD %></td>
                       <td><%= dt.CUST_CD %></td>
                       <td><%= dt.USER_NAME %></td>
+                      <td>
+                        <% if (dt.DEVICE_ID && dt.DEVICE_ID !== 'null' && dt.DEVICE_ID !== '') { %>
+                          <span class="badge badge-success px-2 py-1"><i class="fas fa-lock mr-1"></i> Bound (<%= dt.DEVICE_TYPE || 'Device' %>)</span>
+                        <% } else { %>
+                          <span class="badge badge-warning px-2 py-1"><i class="fas fa-unlock mr-1"></i> Ready for New Device</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (dt.TERMS_ACCEPTED === 'Y') { %>
+                          <span class="badge badge-info">Agreed</span>
+                        <% } else { %>
+                          <span class="badge badge-warning">Pending</span>
+                        <% } %>
+                      </td>
                       <td><%= dt.LAST_LOGIN ? dateFormat(dt.LAST_LOGIN, "dd/mm/yyyy") : '' %></td>
                       <td>
-                        <a href="user_delete?id=<%= dt.USER_CD %>" onclick="return deleteUser();" class="btn btn-danger">
-                          Delete
+                        <% if (dt.DEVICE_ID && dt.DEVICE_ID !== 'null' && dt.DEVICE_ID !== '') { %>
+                          <a href="reset_device?id=<%= dt.USER_CD %>" onclick="return confirm('Are you sure you want to shift/reset device binding for <%= dt.USER_NAME %> (<%= dt.USER_CD %>)? The member will be able to bind their new phone on next login.');" class="btn btn-warning btn-sm font-weight-bold" title="Shift / Release Device Binding">
+                            <i class="fas fa-sync-alt mr-1"></i> Shift Device
+                          </a>
+                        <% } %>
+                        <a href="user_delete?id=<%= dt.USER_CD %>" onclick="return deleteUser();" class="btn btn-danger btn-sm">
+                          <i class="fas fa-trash-alt mr-1"></i> Delete
                         </a>
                       </td>
                     </tr>
                     <% i++; }) }else{ %>
                     <tr>
-                      <td colspan="4" class="text-center">No data found</td>
+                      <td colspan="8" class="text-center">No data found</td>
                     </tr>
                     <% } %>
                   </tbody>
                 </table>
               </div>
             </div>
-
-            <!-- <center>
-              <button
-                type="button"
-                class="btn btn-outline-success mt-4"
-                onclick="printDiv()"
-              >
-                Print
-              </button>
-            </center> -->
           </form>
         </div>
       </div>
@@ -97,19 +109,6 @@
 
 <script>
   $(function() {
-    // $("#example1").DataTable({
-    // "responsive": true, "lengthChange": false, "autoWidth": false,
-    // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    // $("#example2").DataTable({
-    //   paging: true,
-    //   lengthChange: false,
-    //   searching: true,
-    //   ordering: true,
-    //   info: true,
-    //   autoWidth: false,
-    //   responsive: true,
-    // });
 	  $("#example2").DataTable({
       paging: true,
       lengthChange: false,
@@ -121,47 +120,8 @@
       buttons: ["csv", "excel", "pdf"]
     }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
   });
-</script>
-<script>
-    function deleteUser(){
-        if (confirm('Are you sure, you want to delete permanently?')) {
-        // Save it!
-           return true;
-        }else{
-            return false;
-        }
-    }
-</script>
-<script>
-  function printDiv() {
-    var divToPrint = document.getElementById("divToPrint");
 
-    var WindowObject = window.open("", "Print-Window");
-    WindowObject.document.open();
-    WindowObject.document.writeln("<!DOCTYPE html>");
-    WindowObject.document.writeln(
-      '<html><head><title></title><style type="text/css">'
-    );
-
-    WindowObject.document.writeln(
-      "@media print { .center { text-align: center;}" +
-      ".inline { display: inline; }" +
-      ".underline { text-decoration: underline; }" +
-      ".left { margin-left: 315px;} " +
-      ".right { margin-right: 375px; display: inline; }" +
-      "table { border-collapse: collapse; font-size: 10px;}" +
-      "th, td { border: 1px solid black; border-collapse: collapse; padding: 6px;}" +
-      "th, td { }" +
-      ".border { border: 1px solid black; } " +
-      ".bottom { bottom: 5px; width: 100%; position: fixed " +
-      "} } </style>"
-    );
-    WindowObject.document.writeln('</head><body onload="window.print()">');
-    WindowObject.document.writeln(divToPrint.innerHTML);
-    WindowObject.document.writeln("</body></html>");
-    WindowObject.document.close();
-    setTimeout(function() {
-      WindowObject.close();
-    }, 10);
+  function deleteUser(){
+      return confirm('Are you sure you want to delete this user permanently?');
   }
 </script>

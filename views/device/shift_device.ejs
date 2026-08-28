@@ -1,0 +1,264 @@
+<%- include('../template/header'); %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1><%= heading %></h1>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <% if(message){ %>
+      <div
+        class="alert alert-<%= message.type; %> alert-dismissible fade show"
+        role="alert"
+      >
+        <strong> <%= message.message; %> </strong>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <% } %>
+
+      <!-- Information Callout Box -->
+      <div class="callout callout-info">
+        <h5><i class="fas fa-info-circle text-info"></i> Device Shift Instructions</h5>
+        <p class="text-muted mb-0">
+          When a member changes their mobile handset, use this module to shift the device binding. 
+          Shifting will release the old physical device lock. Once shifted, the member can open PURDCS GO on their <strong>new handset</strong>, log in with their mPIN or verify via OTP, and the new device will be automatically bound.
+        </p>
+      </div>
+
+      <!-- Quick Shift Form -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary card-outline">
+            <div class="card-header">
+              <h3 class="card-title font-weight-bold">
+                <i class="fas fa-sync-alt mr-1 text-primary"></i> Quick Device Shift
+              </h3>
+            </div>
+            <div class="card-body">
+              <form action="/admin/shift_device" method="post" onsubmit="return confirmShiftSubmit();">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="user_id" class="font-weight-bold">Registered Mobile Number <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                        </div>
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="user_id"
+                          id="user_id"
+                          placeholder="e.g. 9876543210"
+                          maxlength="10"
+                          required
+                        />
+                      </div>
+                      <small class="form-text text-muted">Enter 10-digit registered mobile number.</small>
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label for="remarks" class="font-weight-bold">Shift Reason / Remarks</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="remarks"
+                        name="remarks"
+                        placeholder="e.g. Handset upgraded to new phone / Handset lost"
+                      />
+                      <small class="form-text text-muted">Optional reason for audit logs.</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <button type="submit" class="btn btn-warning font-weight-bold px-4">
+                      <i class="fas fa-exchange-alt mr-1"></i> Shift Device to New App
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+
+      <!-- Registered Devices Table -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 class="card-title font-weight-bold">
+                <i class="fas fa-shield-alt mr-1 text-success"></i> Registered Members & Device Binding Status
+              </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="table-responsive">
+                <table id="deviceTable" class="table table-bordered table-hover table-striped">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th style="width: 5%">#</th>
+                      <th>Phone No</th>
+                      <th>Customer ID</th>
+                      <th>Member Name</th>
+                      <th>Device Status</th>
+                      <th>Platform</th>
+                      <th>Last Login</th>
+                      <th style="width: 15%">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if(req_dt.suc > 0){ var i = 1; req_dt.msg.forEach((dt) => { %>
+                    <tr>
+                      <td><%= i %></td>
+                      <td class="font-weight-bold"><%= dt.USER_CD %></td>
+                      <td><%= dt.CUST_CD %></td>
+                      <td><%= dt.USER_NAME %></td>
+                      <td>
+                        <% if (dt.DEVICE_ID && dt.DEVICE_ID !== 'null' && dt.DEVICE_ID !== '') { %>
+                          <span class="badge badge-success px-2 py-1">
+                            <i class="fas fa-lock mr-1"></i> Bound & Active
+                          </span>
+                        <% } else { %>
+                          <span class="badge badge-warning px-2 py-1">
+                            <i class="fas fa-unlock mr-1"></i> Ready for New Device
+                          </span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (dt.DEVICE_TYPE && dt.DEVICE_TYPE !== 'null') { %>
+                          <span class="badge badge-info"><%= dt.DEVICE_TYPE %></span>
+                        <% } else { %>
+                          <span class="text-muted">-</span>
+                        <% } %>
+                      </td>
+                      <td><%= dt.LAST_LOGIN ? dateFormat(dt.LAST_LOGIN, "dd/mm/yyyy HH:MM") : 'Never' %></td>
+                      <td>
+                        <% if (dt.DEVICE_ID && dt.DEVICE_ID !== 'null' && dt.DEVICE_ID !== '') { %>
+                          <button
+                            type="button"
+                            class="btn btn-warning btn-sm font-weight-bold"
+                            onclick="triggerShiftModal('<%= dt.USER_CD %>', '<%= dt.USER_NAME %>');"
+                            title="Shift to New Device"
+                          >
+                            <i class="fas fa-sync-alt mr-1"></i> Shift Device
+                          </button>
+                        <% } else { %>
+                          <span class="text-success small font-weight-bold">
+                            <i class="fas fa-check-circle mr-1"></i> Open for Login
+                          </span>
+                        <% } %>
+                      </td>
+                    </tr>
+                    <% i++; }) } else { %>
+                    <tr>
+                      <td colspan="8" class="text-center">No user records found</td>
+                    </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Shift Confirmation Modal -->
+<div class="modal fade" id="shiftModal" tabindex="-1" role="dialog" aria-labelledby="shiftModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title font-weight-bold" id="shiftModalLabel">
+          <i class="fas fa-sync-alt mr-1"></i> Confirm Device Shift
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/admin/shift_device" method="post">
+        <div class="modal-body">
+          <p>
+            Are you sure you want to shift the device binding for member <strong id="modalUserName"></strong> (<span id="modalUserIdSpan"></span>)?
+          </p>
+          <div class="alert alert-secondary text-sm">
+            <i class="fas fa-exclamation-triangle text-warning mr-1"></i>
+            This will unbind the member's current physical phone. Once shifted, the member can immediately log in from their new phone to bind it.
+          </div>
+          <input type="hidden" name="user_id" id="modalUserId" value="" />
+          <div class="form-group">
+            <label for="modalRemarks" class="font-weight-bold">Shift Reason / Remarks:</label>
+            <input type="text" class="form-control" name="remarks" id="modalRemarks" placeholder="e.g. Member replaced mobile phone" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-warning font-weight-bold">
+            <i class="fas fa-check mr-1"></i> Confirm & Shift Device
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../template/footer'); %>
+
+<script>
+  $(function () {
+    $("#deviceTable").DataTable({
+      paging: true,
+      lengthChange: true,
+      searching: true,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+      buttons: ["csv", "excel", "pdf", "print"]
+    }).buttons().container().appendTo('#deviceTable_wrapper .col-md-6:eq(0)');
+  });
+
+  function confirmShiftSubmit() {
+    var phone = document.getElementById('user_id').value.trim();
+    if (!phone || phone.length < 10) {
+      alert('Please enter a valid 10-digit mobile number.');
+      return false;
+    }
+    return confirm('Are you sure you want to shift device binding for ' + phone + '? The user will be able to bind their new phone on next login.');
+  }
+
+  function triggerShiftModal(userId, userName) {
+    document.getElementById('modalUserId').value = userId;
+    document.getElementById('modalUserIdSpan').innerText = userId;
+    document.getElementById('modalUserName').innerText = userName || 'Member';
+    $('#shiftModal').modal('show');
+  }
+</script>
