@@ -561,7 +561,7 @@ appApiRouter.post("/send_otp", async (req, res) => {
 	var text = `OTP for your registered mobile number verification is ${otp}.Please validate it to login to the mobile app.Thank you for using mView. -PURDCS`;
   console.log('PURDCS OTP: ', to, otp);
   // return new Promise((resolve, reject) => {
-  return res.send({ suc: 1, msg: 'Otp Sent', otp });
+  // return res.send({ suc: 1, msg: 'Otp Sent', otp });
   var options = {
     'method': 'GET',
     // 'url': 'https://bulksms.sssplsales.in/api/api_http.php?username=SYNERGIC&password=SYN@526RGC&senderid=SYNRGC&to=' + to.split(' ').join('') + '&text=' + text + '&route=Informative&type=text',
