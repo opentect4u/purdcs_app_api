@@ -25,7 +25,7 @@ appApiRouter.post('/chk_acc', async (req, res) => {
     flag = 0;
   var resDt = await F_Select(pax_id, fields, table_name, where, order, flag)
   // console.log(resDt.msg.CHKACC);
-  if(resDt.suc > 0 && resDt.msg.CHKACC == 1){
+  if (resDt.suc > 0 && resDt.msg.CHKACC == 1) {
     fields = "COUNT(*) chkacc";
     table_name = "MM_CUSTOMER";
     where = `phone = '${phone_no.length > 10 ? phone_no.slice(-10) : phone_no}' AND APP_FLAG ='Y'`;
@@ -34,7 +34,7 @@ appApiRouter.post('/chk_acc', async (req, res) => {
     let dt = await F_Select(pax_id, fields, table_name, where, order, flag)
     resDt = dt
     res.send(resDt);
-  }else{
+  } else {
     res.send(resDt);
   }
 })
@@ -113,7 +113,7 @@ appApiRouter.post('/daily_deposit_download', async (req, res) => {
     frmdt = dateFormat(data.frm_dt, "dd/mm/yyyy"),
     todt = dateFormat(data.to_dt, "dd/mm/yyyy");
   var pax_id = db_id,
-    fields = "acc_num, trans_type, paid_dt, paid_amt, balance_amt",
+    fields = "acc_num, trans_type, (paid_dt+1) paid_dt, paid_amt, balance_amt",
     table_name = "TM_DAILY_DEPOSIT",
     where = `acc_num ='${acc_num}' AND PAID_DT BETWEEN TO_DATE('${frmdt}', 'dd/mm/yyyy') AND TO_DATE('${todt}', 'dd/mm/yyyy')`,
     order = 'ORDER BY PAID_DT, TRANS_CD',
@@ -131,7 +131,7 @@ appApiRouter.post('/deposit_download_stmt', async (req, res) => {
   var pax_id = db_id,
     pro_query = `DECLARE AD_ACC_TYPE_CD NUMBER; AS_ACC_NUM VARCHAR2(200); ADT_FROM_DT DATE; ADT_TO_DT DATE; BEGIN AD_ACC_TYPE_CD := ${acc_type};AS_ACC_NUM := '${acc_num}';ADT_FROM_DT := TO_DATE('${frmdt}', 'dd/mm/yyyy');ADT_TO_DT := TO_DATE('${todt}', 'dd/mm/yyyy');P_ACC_STMT(AD_ACC_TYPE_CD => AD_ACC_TYPE_CD,AS_ACC_NUM => AS_ACC_NUM,ADT_FROM_DT => ADT_FROM_DT,ADT_TO_DT => ADT_TO_DT); END;`,
     table_name = 'tt_acc_stmt',
-    fields = '*',
+    fields = '(TRANS_DT+1) TRANS_DT, PARTICULARS, DR_AMT, CR_AMT, BALANCE, SRL_NO, INSTRUMENT_NUM',
     where = null,
     order = null;
   // console.log(pro_query);
@@ -267,7 +267,7 @@ appApiRouter.post("/login", async (req, res) => {
   userId = userId.length > 10 ? userId.slice(-10) : userId
   var chkuser = await chkUserPlayFlag(userId);
   // console.log({chk: chkuser.msg.CHKACC});
-  if(chkuser.suc > 0 && chkuser.msg.CHKACC > 0 || userId == '9051203118' || userId == '9831887194' || userId == '9748767314' || userId == '7008893051'){
+  if (chkuser.suc > 0 && chkuser.msg.CHKACC > 0 || userId == '9051203118' || userId == '9831887194' || userId == '9748767314' || userId == '7008893051') {
     var pax_id = db_id,
       fields = "user_cd, mpin, last_login, active_status, initcap(user_name)user_name, cust_cd, img_path, device_id, public_key, device_type, terms_accepted, privacy_accepted",
       table_name = "md_user",
@@ -288,7 +288,7 @@ appApiRouter.post("/login", async (req, res) => {
         let custDtls = await F_Select(pax_id, "cust_dt", 'mm_customer', `cust_cd = ${resDt.msg["CUST_CD"]}`, null, 0);
         // console.log('--------', custDtls)
         resDt.msg["CUST_DT"] = custDtls.suc > 0 ? custDtls.msg["CUST_DT"] : null;
-        
+
         if (!isTester) {
           // 1. If user has no device_id registered yet (or shifted by admin) -> Bind new device on login
           if (!existingDeviceId || existingDeviceId === 'null' || existingDeviceId === '') {
@@ -327,7 +327,7 @@ appApiRouter.post("/login", async (req, res) => {
     } else {
       res_dt = resDt;
     }
-  }else{
+  } else {
     res_dt = { suc: 0, msg: "Your account is deactivated. Please contact with bank." };
   }
   res.send(res_dt);
@@ -417,11 +417,11 @@ appApiRouter.post("/chk_device_status", async (req, res) => {
 const chkUserPlayFlag = (phone_no) => {
   return new Promise(async (resolve, reject) => {
     var pax_id = db_id,
-    fields = "COUNT(*) chkacc",
-    table_name = "MM_CUSTOMER",
-    where = `phone = '${phone_no}' AND APP_FLAG ='Y'`,
-    order = null,
-    flag = 0;
+      fields = "COUNT(*) chkacc",
+      table_name = "MM_CUSTOMER",
+      where = `phone = '${phone_no}' AND APP_FLAG ='Y'`,
+      order = null,
+      flag = 0;
     var resDt = await F_Select(pax_id, fields, table_name, where, order, flag)
     resolve(resDt);
   })
@@ -472,7 +472,7 @@ appApiRouter.post("/reset_pin", async (req, res) => {
   var phone_no = data.phone_no.split(' ').join(''),
     pin = data.pin,
     oldPin = data.old_pin;
-    phone_no = phone_no.length > 10 ? phone_no.slice(-10) : phone_no
+  phone_no = phone_no.length > 10 ? phone_no.slice(-10) : phone_no
   var pass = bcrypt.hashSync(pin, 10);
   var datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
 
@@ -522,29 +522,29 @@ appApiRouter.post("/set_pin", async (req, res) => {
   var chk_user = await chkUser(phone_no);
   var res_dt;
   if (chk_user.suc > 0) {
-   // if (await bcrypt.compare(oldPin, chk_user.msg["MPIN"])) {
-      var pax_id = db_id,
-        table_name = "MD_USER",
-        fields = `MPIN = :0, MODIFIED_BY = :1, MODIFIED_DT = :2`,
-        fieldIndex = null,
-        values = [pass, phone_no, dateFormat(datetime, "dd-mmm-yy")],
-        where = `USER_CD = '${phone_no}'`,
-        flag = 1;
-      var resDt = await Api_Insert(
-        pax_id,
-        table_name,
-        fields,
-        fieldIndex,
-        values,
-        where,
-        flag
-      );
-      res_dt = resDt;
-      res.send(res_dt);
-  //  } else {
-   //   res_dt = { suc: 0, msg: "Please Enter Your Correct old mPIN" };
-   //   res.send(res_dt);
-   // }
+    // if (await bcrypt.compare(oldPin, chk_user.msg["MPIN"])) {
+    var pax_id = db_id,
+      table_name = "MD_USER",
+      fields = `MPIN = :0, MODIFIED_BY = :1, MODIFIED_DT = :2`,
+      fieldIndex = null,
+      values = [pass, phone_no, dateFormat(datetime, "dd-mmm-yy")],
+      where = `USER_CD = '${phone_no}'`,
+      flag = 1;
+    var resDt = await Api_Insert(
+      pax_id,
+      table_name,
+      fields,
+      fieldIndex,
+      values,
+      where,
+      flag
+    );
+    res_dt = resDt;
+    res.send(res_dt);
+    //  } else {
+    //   res_dt = { suc: 0, msg: "Please Enter Your Correct old mPIN" };
+    //   res.send(res_dt);
+    // }
   } else {
     res_dt = chk_user;
     res.send(res_dt);
@@ -558,7 +558,7 @@ appApiRouter.post("/send_otp", async (req, res) => {
   var otp = Math.floor(1000 + Math.random() * 9000);
   // var text = `Dear User, ${otp} is your Bikash verification code. Do not share it with anyone.-SYNERGIC`;
   // var text = `OTP for your registered mobile number verification is ${otp}.Please validate it to login to the mobile app.Thank you for using mView. -PURDCS`;
-	var text = `OTP for your registered mobile number verification is ${otp}.Please validate it to login to the mobile app.Thank you for using mView. -PURDCS`;
+  var text = `OTP for your registered mobile number verification is ${otp}.Please validate it to login to the mobile app.Thank you for using mView. -PURDCS`;
   console.log('PURDCS OTP: ', to, otp);
   // return new Promise((resolve, reject) => {
   // return res.send({ suc: 1, msg: 'Otp Sent', otp });
@@ -566,7 +566,7 @@ appApiRouter.post("/send_otp", async (req, res) => {
     'method': 'GET',
     // 'url': 'https://bulksms.sssplsales.in/api/api_http.php?username=SYNERGIC&password=SYN@526RGC&senderid=SYNRGC&to=' + to.split(' ').join('') + '&text=' + text + '&route=Informative&type=text',
     // 'url': `http://sms.digilexa.in/http-api.php?username=PURI&password=PURDCS@321&senderid=PURDCS&route=7&number=${to.split(' ').join('')}&message=${text}`,
-	  'url': `http://sms.synergicapi.in/api.php?username=puriuccs&apikey=AuyJehOqnvI0&senderid=PURDCS&route=OTP&mobile=${to.split(' ').join('')}&text=${text}`,
+    'url': `http://sms.synergicapi.in/api.php?username=puriuccs&apikey=AuyJehOqnvI0&senderid=PURDCS&route=OTP&mobile=${to.split(' ').join('')}&text=${text}`,
     'headers': {
     }
   };
@@ -635,7 +635,7 @@ appApiRouter.post('/update_profile', async (req, res) => {
       }
     })
   } else {
-    resDt = {suc: 0, msg: 'File Not Selected'}
+    resDt = { suc: 0, msg: 'File Not Selected' }
     res.send(resDt)
     // file_name = '';
   }
@@ -644,58 +644,58 @@ appApiRouter.post('/update_profile', async (req, res) => {
 appApiRouter.post('/request_passbook_acc_list', async (req, res) => {
   var cust_id = req.body.cust_id;
   var pax_id = db_id,
-      fields = "A.ACC_TYPE_CD,initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC,A.ACC_NUM",
-      table_name = "TM_DEPOSIT A, MM_ACC_TYPE B",
-      where = `A.CUST_CD = ${cust_id.split(' ').join('')} AND   nvl(A.ACC_STATUS,'O') <> 'C' AND   A.ACC_TYPE_CD= B.ACC_TYPE_CD AND   a.acc_type_cd IN (1,7,6)`,
-      order = null,
-      flag = 1;
-    var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
-    res.send(resDt);
+    fields = "A.ACC_TYPE_CD,initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC,A.ACC_NUM",
+    table_name = "TM_DEPOSIT A, MM_ACC_TYPE B",
+    where = `A.CUST_CD = ${cust_id.split(' ').join('')} AND   nvl(A.ACC_STATUS,'O') <> 'C' AND   A.ACC_TYPE_CD= B.ACC_TYPE_CD AND   a.acc_type_cd IN (1,7,6)`,
+    order = null,
+    flag = 1;
+  var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
+  res.send(resDt);
 })
 
 appApiRouter.post('/request_cheque_acc_list', async (req, res) => {
   var cust_id = req.body.cust_id;
   var pax_id = db_id,
-      fields = "A.ACC_TYPE_CD,  initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.ACC_NUM" +
-                " FROM  TM_DEPOSIT A, MM_ACC_TYPE B" +
-                " WHERE A.CUST_CD = " + cust_id.split(' ').join('') +
-                " AND   nvl(A.ACC_STATUS,'O') <> 'C'" +
-                " AND   A.ACC_TYPE_CD= B.ACC_TYPE_CD" +
-                " AND   a.acc_type_cd IN (1,7)" +
-                " AND   a.cheque_facility_flag = 'Y'" +
-                " UNION" +
-                " SELECT A.ACC_CD ACC_TYPE_CD, initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.LOAN_ID ACC_NUM" +
-                " FROM  TM_LOAN_ALL A, MM_ACC_TYPE B" +
-                " WHERE A.PARTY_CD = " + cust_id.split(' ').join('') +
-                " AND   A.ACC_CD= B.ACC_TYPE_CD" +
-                " AND   a.acc_cd = 23115" +
-                " AND   a.cheque_facility = 'Y'",
-      table_name = null,
-      where = null,
-      order = null,
-      flag = 1;
-    var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
-    res.send(resDt);
+    fields = "A.ACC_TYPE_CD,  initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.ACC_NUM" +
+      " FROM  TM_DEPOSIT A, MM_ACC_TYPE B" +
+      " WHERE A.CUST_CD = " + cust_id.split(' ').join('') +
+      " AND   nvl(A.ACC_STATUS,'O') <> 'C'" +
+      " AND   A.ACC_TYPE_CD= B.ACC_TYPE_CD" +
+      " AND   a.acc_type_cd IN (1,7)" +
+      " AND   a.cheque_facility_flag = 'Y'" +
+      " UNION" +
+      " SELECT A.ACC_CD ACC_TYPE_CD, initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.LOAN_ID ACC_NUM" +
+      " FROM  TM_LOAN_ALL A, MM_ACC_TYPE B" +
+      " WHERE A.PARTY_CD = " + cust_id.split(' ').join('') +
+      " AND   A.ACC_CD= B.ACC_TYPE_CD" +
+      " AND   a.acc_cd = 23115" +
+      " AND   a.cheque_facility = 'Y'",
+    table_name = null,
+    where = null,
+    order = null,
+    flag = 1;
+  var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
+  res.send(resDt);
 })
 
 appApiRouter.post('/request_statement_acc_list', async (req, res) => {
   var cust_id = req.body.cust_id;
   var pax_id = db_id,
-      fields = "A.ACC_TYPE_CD,  initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.ACC_NUM" +
+    fields = "A.ACC_TYPE_CD,  initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.ACC_NUM" +
       " FROM  TM_DEPOSIT A, MM_ACC_TYPE B" +
       " WHERE A.CUST_CD = " + cust_id.split(' ').join('') + " AND nvl(A.ACC_STATUS,'O') <> 'C'" +
       " AND   A.ACC_TYPE_CD= B.ACC_TYPE_CD" +
-      " UNION"+
+      " UNION" +
       " SELECT A.ACC_CD ACC_TYPE_CD, initcap(B.ACC_TYPE_DESC)ACC_TYPE_DESC, A.LOAN_ID ACC_NUM" +
       " FROM  TM_LOAN_ALL A, MM_ACC_TYPE B" +
       " WHERE A.PARTY_CD = " + cust_id.split(' ').join('') +
       " AND   A.ACC_CD= B.ACC_TYPE_CD",
-      table_name = null,
-      where = null,
-      order = null,
-      flag = 1;
-    var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
-    res.send(resDt);
+    table_name = null,
+    where = null,
+    order = null,
+    flag = 1;
+  var resDt = await F_Select(pax_id, fields, table_name, where, order, flag);
+  res.send(resDt);
 })
 
 appApiRouter.post('/send_request', async (req, res) => {
@@ -708,27 +708,27 @@ appApiRouter.post('/send_request', async (req, res) => {
     values,
     where = null,
     flag = 0;
-    if(data.flag != 'A'){
-      values = [
-        dateFormat(datetime, "dd-mmm-yy"),
-        data.cust_id,
-        data.acc_type_id,
-        data.acc_tyep_name,
-        data.acc_no,
-        data.flag,
-      ];
-    }else{
-      values = [
-        dateFormat(datetime, "dd-mmm-yy"),
-        data.cust_id,
-        data.acc_type_id,
-        data.acc_tyep_name,
-        data.acc_no,
-        data.flag,
-        dateFormat(data.frm_dt, "dd-mmm-yy"),
-        dateFormat(data.to_dt, "dd-mmm-yy"),
-      ];
-    }
+  if (data.flag != 'A') {
+    values = [
+      dateFormat(datetime, "dd-mmm-yy"),
+      data.cust_id,
+      data.acc_type_id,
+      data.acc_tyep_name,
+      data.acc_no,
+      data.flag,
+    ];
+  } else {
+    values = [
+      dateFormat(datetime, "dd-mmm-yy"),
+      data.cust_id,
+      data.acc_type_id,
+      data.acc_tyep_name,
+      data.acc_no,
+      data.flag,
+      dateFormat(data.frm_dt, "dd-mmm-yy"),
+      dateFormat(data.to_dt, "dd-mmm-yy"),
+    ];
+  }
   var resDt = await Api_Insert(
     pax_id,
     table_name,
@@ -777,22 +777,22 @@ appApiRouter.post('/rd_emi_calculator', async (req, res) => {
   res.send(resDt);
 })
 appApiRouter.post('/loan_emi_calculator', async (req, res) => {
-  
-		 var data = req.body;
-		  var prn_amt = data.prn_amt,
-     intt_rate = data.intt_rate,
-	  period = data.period,
-	  intt_type = data.intt_type;
-	 var pax_id = db_id;
-		var	pro_query = `DECLARE LD_PRN_AMT NUMBER; LD_INTT_RT NUMBER; LD_NO_INSTL NUMBER; LD_EMI_FORMULA NUMBER; BEGIN LD_PRN_AMT := ${prn_amt};LD_INTT_RT := '${intt_rate}';LD_NO_INSTL := '${period}';LD_EMI_FORMULA := '${intt_type}';P_EMI_DISPLAY(LD_PRN_AMT => LD_PRN_AMT,LD_INTT_RT => LD_INTT_RT,LD_NO_INSTL => LD_NO_INSTL,LD_EMI_FORMULA => LD_EMI_FORMULA); END;`;
-		var	table_name = 'TT_EMI_DISPLAY',
-			fields = 'EMI_NO,ROUND(EMI_PRN) as EMI_PRN,ROUND(EMI_INTT) as EMI_INTT,ROUND(TOTAL_EMI) as TOTAL_EMI',
-			where = null,
-			order = null;
-	
-	
-	 var resDt = await RunProcedure(pax_id, pro_query, table_name, fields, where, order);
-     res.send({ suc: 1, msg: resDt  });
+
+  var data = req.body;
+  var prn_amt = data.prn_amt,
+    intt_rate = data.intt_rate,
+    period = data.period,
+    intt_type = data.intt_type;
+  var pax_id = db_id;
+  var pro_query = `DECLARE LD_PRN_AMT NUMBER; LD_INTT_RT NUMBER; LD_NO_INSTL NUMBER; LD_EMI_FORMULA NUMBER; BEGIN LD_PRN_AMT := ${prn_amt};LD_INTT_RT := '${intt_rate}';LD_NO_INSTL := '${period}';LD_EMI_FORMULA := '${intt_type}';P_EMI_DISPLAY(LD_PRN_AMT => LD_PRN_AMT,LD_INTT_RT => LD_INTT_RT,LD_NO_INSTL => LD_NO_INSTL,LD_EMI_FORMULA => LD_EMI_FORMULA); END;`;
+  var table_name = 'TT_EMI_DISPLAY',
+    fields = 'EMI_NO,ROUND(EMI_PRN) as EMI_PRN,ROUND(EMI_INTT) as EMI_INTT,ROUND(TOTAL_EMI) as TOTAL_EMI',
+    where = null,
+    order = null;
+
+
+  var resDt = await RunProcedure(pax_id, pro_query, table_name, fields, where, order);
+  res.send({ suc: 1, msg: resDt });
 })
 
 appApiRouter.post('/feedback', async (req, res) => {
@@ -810,7 +810,7 @@ appApiRouter.post('/feedback', async (req, res) => {
     ],
     where = null,
     flag = 0;
-    
+
   var resDt = await Api_Insert(
     pax_id,
     table_name,
@@ -1044,7 +1044,7 @@ LEFT JOIN cte_kyc k
     ON u.CUST_CD = k.cust_cd AND k.rn = 1
 WHERE u.USER_TYPE != 'A' AND u.CUST_CD = ${cust_id}`;
 
-// console.log('Full Query:', full_query);
+  // console.log('Full Query:', full_query);
 
   var resDt = await F_Select(pax_id, null, null, null, null, 0, true, full_query);
   res.send(resDt);
@@ -1102,8 +1102,8 @@ appApiRouter.post('/loan_instl_dtls', async (req, res) => {
     flag = 1;
   var resDt = await F_Select(pax_id, fields, table_name, where, order, flag)
 
-  if(resDt.suc > 0 && resDt.msg.length > 0){
-    for(let dt of resDt.msg){
+  if (resDt.suc > 0 && resDt.msg.length > 0) {
+    for (let dt of resDt.msg) {
       var loan_id = dt["LOAN_ID"];
       var pro_query = `BEGIN P_GENERATE_SCHEDULE('1', '${loan_id}'); END;`;
 
@@ -1177,7 +1177,7 @@ LEFT JOIN NextUpcoming u ON m.loan_id = u.loan_id`;
     }
   }
 
-  
+
   res.send(resDt);
 })
 
@@ -1187,13 +1187,13 @@ appApiRouter.post('/get_branch_info', async (req, res) => {
     101: "19.811155,85.8248181",
     102: "19.8915585,85.8094902",
     103: "20.060918,85.9998101",
-    104: "19.99636,85.8212551",
+    104: "19.9947458,85.8220503",
     105: "19.797147,85.8165251",
     106: "20.0028361,86.1891899",
     107: "20.243377,85.852248",
   }
   var pax_id = db_id,
-  fields = "brn_cd, brn_name, brn_addr, contact_no, decode(brn_cd,100,'Y', 'N') is_head_office, 'www.purdcs.com' website, 'ho@purdcsltd.com' email",
+    fields = "brn_cd, brn_name, brn_addr, contact_no, decode(brn_cd,100,'Y', 'N') is_head_office, 'www.purdcs.com' website, 'ho@purdcsltd.com' email",
     table_name = "m_branch",
     where = null,
     order = null,
@@ -1201,7 +1201,7 @@ appApiRouter.post('/get_branch_info', async (req, res) => {
   var resDt = await F_Select(pax_id, fields, table_name, where, order, flag)
 
   if (resDt.suc > 0 && resDt.msg.length > 0) {
-    for(let dt of resDt.msg){
+    for (let dt of resDt.msg) {
       dt["COORDINATES"] = locationMaster[dt["BRN_CD"]] || "";
     }
   }
