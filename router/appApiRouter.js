@@ -131,7 +131,7 @@ appApiRouter.post('/deposit_download_stmt', async (req, res) => {
   var pax_id = db_id,
     pro_query = `DECLARE AD_ACC_TYPE_CD NUMBER; AS_ACC_NUM VARCHAR2(200); ADT_FROM_DT DATE; ADT_TO_DT DATE; BEGIN AD_ACC_TYPE_CD := ${acc_type};AS_ACC_NUM := '${acc_num}';ADT_FROM_DT := TO_DATE('${frmdt}', 'dd/mm/yyyy');ADT_TO_DT := TO_DATE('${todt}', 'dd/mm/yyyy');P_ACC_STMT(AD_ACC_TYPE_CD => AD_ACC_TYPE_CD,AS_ACC_NUM => AS_ACC_NUM,ADT_FROM_DT => ADT_FROM_DT,ADT_TO_DT => ADT_TO_DT); END;`,
     table_name = 'tt_acc_stmt',
-    fields = '(TRANS_DT+1) TRANS_DT, PARTICULARS, DR_AMT, CR_AMT, BALANCE, SRL_NO, INSTRUMENT_NUM',
+    fields = '(TRANS_DT+1) TRANS_DT, PARTICULARS, DR_AMT, CR_AMT, TRUNC(BALANCE, 2) BALANCE, SRL_NO, INSTRUMENT_NUM',
     where = null,
     order = null;
   // console.log(pro_query);
