@@ -285,9 +285,10 @@ appApiRouter.post("/login", async (req, res) => {
         var incomingDeviceType = data.device_type ? data.device_type.toString().trim() : null;
         var existingDeviceId = resDt.msg["DEVICE_ID"] ? resDt.msg["DEVICE_ID"].toString().trim() : null;
 
-        let custDtls = await F_Select(pax_id, "cust_dt", 'mm_customer', `cust_cd = ${resDt.msg["CUST_CD"]}`, null, 0);
+        let custDtls = await F_Select(pax_id, "cust_dt, cust_type", 'mm_customer', `cust_cd = ${resDt.msg["CUST_CD"]}`, null, 0);
         // console.log('--------', custDtls)
         resDt.msg["CUST_DT"] = custDtls.suc > 0 ? custDtls.msg["CUST_DT"] : null;
+        resDt.msg["CUST_TYPE"] = custDtls.suc > 0 ? custDtls.msg["CUST_TYPE"] : null;
 
         if (!isTester) {
           // 1. If user has no device_id registered yet (or shifted by admin) -> Bind new device on login
